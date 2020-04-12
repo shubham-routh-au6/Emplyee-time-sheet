@@ -1,5 +1,7 @@
-export default (sequelize, DataTypes) => {
-    const TaskSubmit = sequelize.define('tasksubmit', {
+const { Sequlize,DataTypes} = require("sequelize")
+const db = require("../db");
+
+const TaskSubmit = db.define('tasksubmit', {
       taskId: {
         type: DataTypes.INTEGER,
         required:true
@@ -24,5 +26,4 @@ export default (sequelize, DataTypes) => {
       });
       };
   
-    return TaskSubmit;
-  };
+   module.exports = TaskSubmit

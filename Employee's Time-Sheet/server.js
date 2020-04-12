@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 require('dotenv').config();
 const userNormalRoutes = require('./routes/userNormalRoutes');
 const userApiRoutes = require('./routes/employerApiRoutes');
 const employeeApiRoutes = require('./routes/employeeApiRoutes');
-import models from './models';
+const db = require('./db');
 
 
 const app = express();
@@ -14,6 +14,6 @@ app.use(userApiRoutes);
 app.use(employeeApiRoutes);
 
 
-models.sequelize.sync().then(() => {
-    app.listen(8183, ()=>console.log('Server is up at port 8183'));
+db.sync({}).then(() => {
+    app.listen(8180, ()=>console.log('Server is up at port 8180'));
 });

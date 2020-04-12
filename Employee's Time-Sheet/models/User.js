@@ -1,7 +1,7 @@
-'use strict';
-const Sequelize = require('sequelize');
-export default (sequelize, DataTypes) => {
-    const User = sequelize.define('user', {
+const { Sequlize,DataTypes} = require("sequelize")
+const db = require("../db");
+
+const User = db.define('user', {
         username:{
             type:DataTypes.STRING,
             required: true,
@@ -51,5 +51,4 @@ export default (sequelize, DataTypes) => {
     //   });
     // };
   
-    return User;
-  };
+ module.exports = User;

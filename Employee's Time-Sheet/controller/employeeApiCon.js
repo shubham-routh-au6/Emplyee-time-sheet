@@ -1,4 +1,6 @@
-import models from '../models';
+const TaskSubmitted = require('../models/Tasksubmitted');
+const User = require('../models/User');
+const Task = require('../models/Task');
 const datauri = require("../utilities/bufferToString");
 
 
@@ -51,7 +53,7 @@ controller.submitTask = async (req, res)=>{
             }
             let{taskId, taskMembers, taskCompleted, reportUrl} = data
 
-            const savedFile = await models.TaskSubmitted.create({
+            const savedFile = await TaskSubmitted.create({
                 taskId, taskMembers, taskCompleted, reportUrl
             })
             res.json({message:savedFile})

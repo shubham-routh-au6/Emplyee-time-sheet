@@ -42,7 +42,8 @@
 
 //Middleware to check if user is an employee and TL of assignedTask
 
-import models from '../models';
+const User = require('../models/User');
+const Task = require('../models/Task');
 const {verify} = require('jsonwebtoken');
 
 var middleware={};
@@ -53,13 +54,13 @@ var middleware={};
         try {
             const decode = verify(authToken, process.env.EMAIL_SECRET);
             console.log(decode.email)
-            const user = await models.User.findOne({
+            const user = await User.findOne({
                  where: { 
                      email:decode.email
                     } 
             })
             if(user.isEmployee && user.isLoggedIn){
-                const Tl= await models.Task.findOne({
+                const Tl= await Task.findOne({
                     where:{
                         taskTL:user.email
                     }

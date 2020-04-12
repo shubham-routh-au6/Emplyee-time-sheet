@@ -1,4 +1,5 @@
-import models from '../models';
+const User = require('../models/User');
+const Task = require('../models/Task')
 const controller = {};
 
 // controller.dashboardEmployer=(req, res)=>{
@@ -32,7 +33,7 @@ controller.postDashEmployer= async (req, res)=>{
     let errors1 = []
     let verifiedEmails =[]
     for(let employeeEmail of memb) {
-        var test = await models.User.findOne({where:{
+        var test = await User.findOne({where:{
             email:employeeEmail,
             isEmailVerified:true,
             isEmailVerifiedByEmployer:true
@@ -55,7 +56,7 @@ controller.postDashEmployer= async (req, res)=>{
         taskOwner:owner.id
     }
     let{taskTitle, taskTL, taskMembers, taskDetails, taskOwner}=data
-    models.Task.create({
+    Task.create({
         taskTitle, taskTL, taskMembers, taskDetails, taskOwner
     })
     .then(data=>{

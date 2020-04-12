@@ -1,5 +1,8 @@
-export default (sequelize, DataTypes) => {
-    const Company = sequelize.define('company', {
+const { Sequlize,DataTypes} = require("sequelize")
+const db = require("../db");
+
+const Company = db.define(
+    "company",   {
       Cname: {
         type: DataTypes.STRING,
         unique: true,
@@ -19,5 +22,4 @@ export default (sequelize, DataTypes) => {
       });
     };
   
-    return Company;
-  };
+module.exports = Company;

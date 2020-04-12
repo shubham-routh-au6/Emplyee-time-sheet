@@ -1,6 +1,5 @@
 // Middleware function to Check if User is logged in
-
-import models from '../models';
+const User = require('../models/User');
 const {verify} = require('jsonwebtoken');
 
 var middleware={};
@@ -11,7 +10,7 @@ var middleware={};
         try {
             const decode = verify(authToken, process.env.EMAIL_SECRET);
             console.log(decode.email)
-            const user = await models.User.findOne({
+            const user = await User.findOne({
                  where: { 
                      email:decode.email
                     } 

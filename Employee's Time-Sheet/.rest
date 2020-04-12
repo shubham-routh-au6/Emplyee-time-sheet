@@ -1,0 +1,66 @@
+POST http://localhost:8180/signup
+
+//if employer wants to sign up then the isEmployer must be true and if employee wants to sign up then is Employee must be true
+
+# Content-Type: application/json
+
+{
+	"name":"Shub",
+	"email":"ruthsteve121@gmail.com",
+	"password":"qwertyu",
+	"isEmployee":"false",
+	"isEmployer":"true",
+	"companyName":"xyz"
+}
+
+//This route is to sign in
+# ###
+
+# POST http://localhost:8180/signin
+# Content-Type: application/json
+
+{
+	"email":"ruthsteve121@gmail.com",
+	"password":"qwertyu"
+}
+
+# ###
+//This route is to logout and header is required
+# POST http://localhost:8080/signout
+# Content-Type: application/json
+
+# req.header: Authorization
+
+
+# {
+#     "email": "w@w",
+#     "password": "w"
+# }
+
+
+
+//This route is for Employer to assign task, header is required
+# ###
+# POST http://localhost:8180/assignTask
+
+# req.header: Authorization
+
+{
+		"taskTitle":"CORS",
+        "taskMembers":"testnation23@gmail.com shubruth8@gmail.com",
+        "taskTL":"testnation23@gmail.com",
+        "taskDetails":"CORS need to be implemented in order to make the font-end work"
+}
+
+
+// This route is for employee(only TL) to submit task and header is required
+# ###
+# POST http://localhost:8180/submitTask
+
+# req.header: Authorization
+
+//under form-data
+
+{
+    "reportUrl":"anyPicture.jpg"
+}

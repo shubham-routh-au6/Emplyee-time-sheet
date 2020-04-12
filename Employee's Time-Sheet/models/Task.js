@@ -1,5 +1,7 @@
-export default (sequelize, DataTypes) => {
-    const Task = sequelize.define('task', {
+const { Sequlize,DataTypes} = require("sequelize")
+const db = require("../db");
+
+const Task = db.define('task', {
       taskTitle: {
         type: DataTypes.STRING,
       },
@@ -19,6 +21,4 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'owner',
       });
       };
-  
-    return Task;
-  };
+  module.exports = Task;

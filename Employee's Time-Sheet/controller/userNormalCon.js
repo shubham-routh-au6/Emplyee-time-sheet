@@ -1,9 +1,11 @@
-import models from '../models';
-//const User = require('../models/User');
+const User = require('../models/User');
+const Task = require('../models/Task');
+const Company = require('../models/Company');
+//const User = require('..//User');
 const {hash, compare} = require('bcryptjs');
 const {sign, verify} = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-// const sequelize = require('sequelize');
+const sequelize = require('sequelize');
 const { Op } = require('sequelize');
 
 
@@ -24,7 +26,7 @@ controller.signUp = async (req, res)=>{
     }
     else{
         
-        models.User.findOne({
+        User.findOne({
             where:{
                 email:req.body.email
             }
@@ -41,7 +43,7 @@ controller.signUp = async (req, res)=>{
                         isEmployee:req.body.isEmployee
                     };
                     let{username, email, password, isEmployer, companyName, isEmployee}=data
-                    models.User.create({
+                    User.create({
                         username, email, password, isEmployer,companyName, isEmployee
                     }).then(data1 =>{
                         if(data1.isEmployer == true){
@@ -50,7 +52,7 @@ controller.signUp = async (req, res)=>{
                                 owner:data1.id
                             };
                             let{Cname, owner}=companyData
-                            models.Company.create({
+                            Company.create({
                                 Cname, owner
                             })
                             .then(dat =>console.log(dat))
@@ -94,10 +96,10 @@ controller.signUp = async (req, res)=>{
                             //     {'where': {'id': roomId}}
                             //    );
 
-                            // await models.User.update({ isEmailVerified: true, isEmailVerifiedByEmployer:true }, { where: { id:decode.user } });
+                            // await User.update({ isEmailVerified: true, isEmailVerifiedByEmployer:true }, { where: { id:decode.user } });
                             
                                         const company = data1.companyName
-                            models.User.findOne({where:{
+                            User.findOne({where:{
                                 isEmployer:true,
                                 companyName:company
                             }
@@ -168,7 +170,7 @@ controller.employerConfirmation = async (req, res) => {
   try {
     const decode = verify(req.params.token, process.env.EMAIL_SECRET);
     console.log(decode)
-    await models.User.update({ isEmailVerified: true, isEmailVerifiedByEmployer:true }, { where: { id:decode.user } });
+    await User.update({ isEmailVerified: true, isEmailVerifiedByEmployer:true }, { where: { id:decode.user } });
   } 
   catch (e) {
     return res.status(500).json({message:e.message});
@@ -186,7 +188,7 @@ controller.employeeConfirmation = async (req, res) => {
     try {
       const decode = verify(req.params.token, process.env.EMAIL_SECRET);
       console.log(decode)
-      await models.User.update({ isEmailVerifiedByEmployer: true }, { where: { email:decode.email } });
+      await User.update({ isEmailVerifiedByEmployer: true }, { where: { email:decode.email } });
       sign(
         {
             id:decode.id,
@@ -233,8 +235,8 @@ controller.rejectEmployee=async(req, res)=>{
     const decode = verify(req.params.token, process.env.EMAIL_SECRET);
     console.log(decode)
     console.log(typeof(decode.id))
-    await models.User.destroy({ where: { email:decode.email } });
-    // models.Company.findOne({
+    await User.destroy({ where: { email:decode.email } });
+    // .Company.findOne({
     //     where: {
     //         Cemployee: { $in: decode.id }
     //     }
@@ -256,8 +258,8 @@ controller.employerApproval= async(req, res)=>{
   try {
     const decode = verify(req.params.token, process.env.EMAIL_SECRET);
     console.log(decode)
-    await models.User.update({ isEmailVerified: true, }, { where: { email:decode.user } });
-    models.Company.update(
+    await User.update({ isEmailVerified: true, }, { where: { email:decode.user } });
+    Company.update(
         {'Cemployee': sequelize.fn('array_append', sequelize.col('Cemployee'), decode.id)},
         {'where': {'Cname': decode.company}}
         ).then(data=>{
@@ -278,7 +280,7 @@ controller.signin = async (req, res)=>{
         res.status(200).json({message:'Please fill the required details'})
     }
     else{
-        models.User.findOne({
+        User.findOne({
             where:{
                 email:req.body.email
             }
@@ -305,12 +307,12 @@ controller.signin = async (req, res)=>{
                                     if(err)return res.status(500).send('Server error')
                                     console.log(`token: ${token}`)
                                     // Setting isLoggedIn to true
-                                    models.User.update({ isLoggedIn: true }, { where: { email:req.body.email } })
+                                    User.update({ isLoggedIn: true }, { where: { email:req.body.email } })
                                     .then(data1=>{
                                         console.log(data1)
                                         if(data.isEmployer==true){
                                             let employees = []
-                                            models.User.findAll({where:{
+                                            User.findAll({where:{
                                                 companyName:data.companyName,
                                                 isEmployee:true,
                                                 isEmailVerified:true,
@@ -328,7 +330,7 @@ controller.signin = async (req, res)=>{
                                         }
                                         else{
                                             console.log(typeof(data.email))
-                                            models.Task.findOne({
+                                            Task.findOne({
                                                 where:{
                                                     taskMembers:{ [Op.contains]: [data.email] }
                                                 }
@@ -377,7 +379,7 @@ controller.signin = async (req, res)=>{
 controller.signOut= async(req, res)=>{
     const user = req.user
     try {
-        await models.User.update({ isLoggedIn: false }, { where: { email:user.email } });
+        await User.update({ isLoggedIn: false }, { where: { email:user.email } });
         res.status(400).json({message:'Logged out successfully'})
       } 
       catch (e) {
@@ -388,7 +390,7 @@ controller.signOut= async(req, res)=>{
 
 // controller.addToCemployee = async(req, res)=>{
 //     const numb = req.body.number
-//     models.Company.findOne({
+//     .Company.findOne({
 //         where:{
 //             Cname:'xyz'
 //         }
